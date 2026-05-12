@@ -1,0 +1,22 @@
+{
+  "name": "FullPP",
+  "description": "Set your WhatsApp full profile picture without cropping",
+  "keywords": ["node", "whatsapp", "baileys", "profile"],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment",
+      "value": "production"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "stack": "heroku-24"
+}

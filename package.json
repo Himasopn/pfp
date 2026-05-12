@@ -1,0 +1,26 @@
+{
+  "name": "fullpp-site",
+  "version": "1.0.0",
+  "description": "Set your WhatsApp full profile picture without cropping",
+  "main": "server.js",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jimp": "^1.6.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.12.0",
+    "pino": "^9.3.2",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0"
+  }
+}
