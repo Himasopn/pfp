@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "^6.7.9",
+    "gifted-baileys": "^2.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jimp": "^1.6.0",

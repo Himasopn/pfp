@@ -1,7 +1,7 @@
 {
   "name": "FullPP",
   "description": "Set your WhatsApp full profile picture without cropping",
-  "keywords": ["node", "whatsapp", "baileys", "profile"],
+  "keywords": ["node", "whatsapp", "gifted-baileys", "profile"],
   "addons": [
     {
       "plan": "heroku-postgresql:essential-0"

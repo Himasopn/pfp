@@ -4,7 +4,7 @@ const {
   DisconnectReason,
   makeCacheableSignalKeyStore,
   jidNormalizedUser,
-} = require('@whiskeysockets/baileys');
+} = require('gifted-baileys');
 const { Boom } = require('@hapi/boom');
 const { Jimp } = require('jimp');
 const QRCode = require('qrcode');
