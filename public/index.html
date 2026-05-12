@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#F2F2F7" />
+  <title>FullPP – WhatsApp Profile</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F2F2F7;
+      --bg2: #E5E5EA;
+      --card: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(255, 255, 255, 0.7);
+      --primary: #007AFF;
+      --primary-dark: #0056CC;
+      --primary-tint: rgba(0, 122, 255, 0.1);
+      --success: #34C759;
+      --success-tint: rgba(52, 199, 89, 0.12);
+      --danger: #FF3B30;
+      --danger-tint: rgba(255, 59, 48, 0.1);
+      --warn: #FF9500;
+      --text1: #1C1C1E;
+      --text2: #636366;
+      --text3: #AEAEB2;
+      --sep: rgba(60, 60, 67, 0.13);
+      --fill: rgba(120, 120, 128, 0.12);
+      --fill2: rgba(120, 120, 128, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 13px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+              'Helvetica Neue', Arial, sans-serif;
+      --transition: 0.28s cubic-bezier(0.34, 1.22, 0.64, 1);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text1);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(168,139,250,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(96,165,250,0.14) 0%, transparent 60%),
+        var(--bg);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    /* ── App container ────────────────────────────────────────────────────── */
+    .app {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* ── Brand header ─────────────────────────────────────────────────────── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .brand-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 2px 10px rgba(52,199,89,0.35);
+    }
+    .brand-text h1 {
+      font-size: 20px; font-weight: 700; letter-spacing: -0.3px;
+      color: var(--text1);
+    }
+    .brand-text p {
+      font-size: 13px; color: var(--text2); margin-top: 1px;
+    }
+
+    /* ── Card ─────────────────────────────────────────────────────────────── */
+    .card {
+      width: 100%;
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      overflow: hidden;
+    }
+
+    /* ── Steps ────────────────────────────────────────────────────────────── */
+    .step { display: none; }
+    .step.active {
+      display: block;
+      animation: stepIn 0.3s cubic-bezier(0.34, 1.18, 0.64, 1) forwards;
+    }
+    @keyframes stepIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Step header ──────────────────────────────────────────────────────── */
+    .step-head {
+      padding: 24px 24px 0;
+    }
+    .step-head h2 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+      color: var(--text1); margin-bottom: 5px;
+    }
+    .step-head p {
+      font-size: 15px; color: var(--text2); line-height: 1.4;
+    }
+    .step-body { padding: 20px 24px 24px; }
+
+    /* ── Back button ──────────────────────────────────────────────────────── */
+    .back-row {
+      display: flex; align-items: center; gap: 4px;
+      padding: 16px 20px 0;
+    }
+    .btn-back {
+      background: none; border: none; cursor: pointer;
+      color: var(--primary); font-size: 15px; font-weight: 500;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 0; font-family: var(--font);
+      transition: opacity 0.15s;
+    }
+    .btn-back:active { opacity: 0.6; }
+    .btn-back svg { width: 10px; height: 16px; }
+
+    /* ── Upload zone ──────────────────────────────────────────────────────── */
+    .upload-zone {
+      border: 2px dashed var(--sep);
+      border-radius: var(--radius-md);
+      background: var(--fill2);
+      min-height: 200px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--primary);
+      background: var(--primary-tint);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;
+    }
+    .upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .upload-icon {
+      width: 52px; height: 52px;
+      background: var(--fill);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .upload-placeholder h3 { font-size: 16px; font-weight: 600; color: var(--text1); }
+    .upload-placeholder p { font-size: 13px; color: var(--text2); }
+
+    /* ── Preview ──────────────────────────────────────────────────────────── */
+    .preview-wrap {
+      display: none;
+      flex-direction: column; align-items: center; gap: 12px;
+      padding: 16px;
+    }
+    .preview-wrap.visible { display: flex; }
+    .preview-img-wrap {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      max-width: 180px; max-height: 180px;
+      box-shadow: var(--shadow-sm);
+    }
+    .preview-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .preview-badge {
+      font-size: 12px; color: var(--success); font-weight: 600;
+      background: var(--success-tint);
+      padding: 4px 10px; border-radius: 20px;
+      letter-spacing: 0.1px;
+    }
+    .btn-remove {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: var(--danger); font-weight: 500;
+      font-family: var(--font); padding: 0;
+      transition: opacity 0.15s;
+    }
+    .btn-remove:active { opacity: 0.5; }
+
+    /* ── Buttons ──────────────────────────────────────────────────────────── */
+    .btn-primary {
+      width: 100%; padding: 15px;
+      background: var(--primary);
+      color: #fff; font-size: 17px; font-weight: 600;
+      border: none; border-radius: var(--radius-md);
+      cursor: pointer; font-family: var(--font);
+      transition: background 0.15s, transform 0.1s, opacity 0.15s;
+      margin-top: 16px; letter-spacing: -0.1px;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled {
+      background: var(--fill);
+      color: var(--text3);
+      cursor: not-allowed;
+    }
+
+    /* ── Method cards ─────────────────────────────────────────────────────── */
+    .method-list { display: flex; flex-direction: column; gap: 0; }
+    .method-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); text-align: left; width: 100%;
+      border-radius: 0;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .method-item:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    .method-item:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+    .method-item:hover { background: var(--fill2); }
+    .method-item:active { background: var(--fill); }
+    .method-item + .method-item::before {
+      content: '';
+      position: absolute; top: 0; left: 48px; right: 0;
+      height: 1px; background: var(--sep);
+    }
+    .method-icon-wrap {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .method-icon-wrap.blue { background: var(--primary-tint); }
+    .method-icon-wrap.green { background: var(--success-tint); }
+    .method-info { flex: 1; }
+    .method-info h3 { font-size: 16px; font-weight: 600; color: var(--text1); }
+    .method-info p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+    .chevron { color: var(--text3); font-size: 18px; font-weight: 600; }
+
+    .method-card-wrap {
+      background: var(--fill2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    /* ── QR step ──────────────────────────────────────────────────────────── */
+    .qr-container {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .qr-frame {
+      width: 240px; height: 240px;
+      background: #fff;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .qr-frame img { width: 220px; height: 220px; border-radius: 4px; }
+    .qr-skeleton {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius-md);
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .qr-hint {
+      text-align: center;
+      background: var(--fill2);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      width: 100%;
+    }
+    .qr-hint p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .qr-hint strong { color: var(--text1); font-weight: 600; }
+    .qr-steps {
+      display: flex; flex-direction: column; gap: 6px; text-align: left;
+    }
+    .qr-step-row { display: flex; align-items: flex-start; gap: 8px; }
+    .qr-num {
+      width: 18px; height: 18px; min-width: 18px;
+      background: var(--primary); color: #fff;
+      border-radius: 50%; font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .qr-step-text { font-size: 13px; color: var(--text2); line-height: 1.4; }
+
+    /* ── Pair step ────────────────────────────────────────────────────────── */
+    .phone-input-wrap {
+      display: flex; gap: 8px; align-items: stretch;
+    }
+    .flag-select {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 12px;
+      background: var(--fill2);
+      border: 1.5px solid var(--sep);
+      border-radius: var(--radius-sm);
+      font-family: var(--font); font-size: 15px;
+      color: var(--text1); cursor: pointer;
+      min-width: 90px; white-space: nowrap;
+      transition: border-color 0.15s;
+    }
+    .flag-select:focus { outline: none; border-color: var(--primary); }
+    .phone-input {
+      flex: 1; padding: 14px 14px;
+      background: var(--fill2);
+      border: 1.5px solid var(--sep);
+      border-radius: var(--radius-sm);
+      font-family: var(--font); font-size: 17px;
+      color: var(--text1);
+      transition: border-color 0.15s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .phone-input::placeholder { color: var(--text3); }
+    .phone-input:focus { outline: none; border-color: var(--primary); background: #fff; }
+    .input-label {
+      font-size: 13px; font-weight: 500; color: var(--text2);
+      margin-bottom: 8px; display: block;
+    }
+
+    /* Pairing code display */
+    .code-display {
+      margin-top: 20px;
+      background: var(--fill2);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      border: 1.5px solid var(--sep);
+    }
+    .code-label { font-size: 13px; color: var(--text2); margin-bottom: 10px; font-weight: 500; }
+    .code-value {
+      font-size: 34px; font-weight: 700; letter-spacing: 6px;
+      color: var(--primary); font-family: 'SF Mono', 'Courier New', monospace;
+      user-select: all;
+    }
+    .code-hint { font-size: 12px; color: var(--text3); margin-top: 8px; line-height: 1.4; }
+    .code-display.hidden { display: none; }
+
+    /* ── Connecting step ──────────────────────────────────────────────────── */
+    .connecting-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 16px; padding: 8px 0 4px;
+      text-align: center;
+    }
+    .spinner-ring {
+      width: 52px; height: 52px;
+      border: 3px solid var(--fill);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .connecting-wrap h3 { font-size: 18px; font-weight: 600; color: var(--text1); }
+    .connecting-wrap p { font-size: 14px; color: var(--text2); }
+
+    /* ── Success step ─────────────────────────────────────────────────────── */
+    .success-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 8px 0 4px; text-align: center;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: var(--success-tint);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .success-wrap h3 { font-size: 22px; font-weight: 700; color: var(--text1); }
+    .success-wrap p { font-size: 15px; color: var(--text2); line-height: 1.4; }
+    .success-msg {
+      background: var(--success-tint);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 14px; font-weight: 500; color: #1a7d35;
+      width: 100%; text-align: center;
+    }
+    .btn-again {
+      width: 100%; padding: 14px;
+      background: var(--fill); color: var(--text1);
+      font-size: 16px; font-weight: 600;
+      border: none; border-radius: var(--radius-md);
+      cursor: pointer; font-family: var(--font);
+      transition: background 0.15s;
+      margin-top: 6px;
+    }
+    .btn-again:hover { background: var(--fill2); }
+
+    /* ── Error step ───────────────────────────────────────────────────────── */
+    .error-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 4px 0; text-align: center;
+    }
+    .error-icon {
+      width: 64px; height: 64px;
+      background: var(--danger-tint);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .error-wrap h3 { font-size: 20px; font-weight: 700; color: var(--text1); }
+    .error-msg-box {
+      background: var(--danger-tint);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 14px; color: #c0392b;
+      width: 100%; line-height: 1.4;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    .footer {
+      font-size: 12px; color: var(--text3);
+      text-align: center; line-height: 1.5;
+    }
+    .footer a { color: var(--text3); text-decoration: none; }
+
+    /* ── Divider ──────────────────────────────────────────────────────────── */
+    .divider {
+      height: 1px; background: var(--sep); margin: 16px 0;
+    }
+    .or-divider {
+      display: flex; align-items: center; gap: 10px; margin: 0;
+    }
+    .or-divider .line { flex: 1; height: 1px; background: var(--sep); }
+    .or-divider span { font-size: 12px; color: var(--text3); font-weight: 500; }
+
+    /* ── Status pill ──────────────────────────────────────────────────────── */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px;
+      background: var(--fill2);
+      border-radius: 20px;
+      font-size: 13px; color: var(--text2);
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--warn);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* ── Responsive ───────────────────────────────────────────────────────── */
+    @media (max-width: 420px) {
+      body { padding: 16px 12px; }
+      .step-head { padding: 20px 20px 0; }
+      .step-body { padding: 16px 20px 20px; }
+      .back-row { padding: 14px 16px 0; }
+    }
+
+    /* ── Dark mode (optional) ─────────────────────────────────────────────── */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1C1C1E;
+        --bg2: #2C2C2E;
+        --card: rgba(44, 44, 46, 0.96);
+        --card-border: rgba(255,255,255,0.08);
+        --text1: #F2F2F7;
+        --text2: #AEAEB2;
+        --text3: #636366;
+        --sep: rgba(255,255,255,0.1);
+        --fill: rgba(255,255,255,0.08);
+        --fill2: rgba(255,255,255,0.05);
+        --primary-tint: rgba(0, 122, 255, 0.15);
+        --success-tint: rgba(52, 199, 89, 0.15);
+        --danger-tint: rgba(255, 59, 48, 0.15);
+      }
+      body {
+        background:
+          radial-gradient(ellipse 80% 60% at 20% -10%, rgba(99,61,220,0.20) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 40% at 80% 110%, rgba(30,80,180,0.15) 0%, transparent 60%),
+          var(--bg);
+      }
+      .phone-input, .flag-select {
+        background: var(--fill); color: var(--text1);
+      }
+      .phone-input:focus { background: var(--fill); }
+      .qr-frame { background: #2C2C2E; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">🖼️</div>
+      <div class="brand-text">
+        <h1>FullPP</h1>
+        <p>Full WhatsApp profile picture</p>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+
+      <!-- ────────── Step 1: Upload ────────── -->
+      <section class="step active" id="step-upload">
+        <div class="step-head">
+          <h2>Upload Photo</h2>
+          <p>Any size or aspect ratio — no cropping.</p>
+        </div>
+        <div class="step-body">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept="image/*" />
+            <div class="upload-placeholder" id="uploadPlaceholder">
+              <div class="upload-icon">🖼️</div>
+              <h3>Choose a photo</h3>
+              <p>Tap to browse or drag &amp; drop</p>
+              <p style="font-size:12px;color:var(--text3);margin-top:2px;">PNG, JPG, WEBP up to 10 MB</p>
+            </div>
+            <div class="preview-wrap" id="previewWrap">
+              <div class="preview-img-wrap">
+                <img id="previewImg" src="" alt="Preview" />
+              </div>
+              <div class="preview-badge">✓ Photo ready</div>
+              <button class="btn-remove" id="removeBtn" type="button">Remove</button>
+            </div>
+          </div>
+          <button class="btn-primary" id="continueBtn" disabled>Continue</button>
+        </div>
+      </section>
+
+      <!-- ────────── Step 2: Method ────────── -->
+      <section class="step" id="step-method">
+        <div class="back-row">
+          <button class="btn-back" data-back="step-upload">
+            <svg viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1L2 8l6 7"/></svg>
+            Back
+          </button>
+        </div>
+        <div class="step-head">
+          <h2>Connect WhatsApp</h2>
+          <p>How would you like to link your account?</p>
+        </div>
+        <div class="step-body">
+          <div class="method-card-wrap">
+            <div class="method-list">
+              <button class="method-item" id="qrMethodBtn">
+                <div class="method-icon-wrap blue">📱</div>
+                <div class="method-info">
+                  <h3>QR Code</h3>
+                  <p>Scan with your WhatsApp camera</p>
+                </div>
+                <span class="chevron">›</span>
+              </button>
+              <button class="method-item" id="pairMethodBtn">
+                <div class="method-icon-wrap green">🔢</div>
+                <div class="method-info">
+                  <h3>Pairing Code</h3>
+                  <p>Enter a code on your phone</p>
+                </div>
+                <span class="chevron">›</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────── Step 3a: QR Code ────────── -->
+      <section class="step" id="step-qr">
+        <div class="back-row">
+          <button class="btn-back" data-back="step-method">
+            <svg viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1L2 8l6 7"/></svg>
+            Back
+          </button>
+        </div>
+        <div class="step-head">
+          <h2>Scan QR Code</h2>
+          <p>Open WhatsApp and scan to connect</p>
+        </div>
+        <div class="step-body">
+          <div class="qr-container">
+            <div class="qr-frame">
+              <div class="qr-skeleton" id="qrSkeleton"></div>
+              <img id="qrImage" src="" alt="QR Code" style="display:none;" />
+            </div>
+            <div class="status-pill" id="qrStatus">
+              <div class="status-dot"></div>
+              <span>Waiting for scan…</span>
+            </div>
+            <div class="qr-hint">
+              <div class="qr-steps">
+                <div class="qr-step-row"><div class="qr-num">1</div><div class="qr-step-text">Open <strong>WhatsApp</strong> on your phone</div></div>
+                <div class="qr-step-row"><div class="qr-num">2</div><div class="qr-step-text">Go to <strong>Settings → Linked Devices</strong></div></div>
+                <div class="qr-step-row"><div class="qr-num">3</div><div class="qr-step-text">Tap <strong>Link a Device</strong> and scan the QR code</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────── Step 3b: Pairing Code ────────── -->
+      <section class="step" id="step-pair">
+        <div class="back-row">
+          <button class="btn-back" data-back="step-method">
+            <svg viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1L2 8l6 7"/></svg>
+            Back
+          </button>
+        </div>
+        <div class="step-head">
+          <h2>Pairing Code</h2>
+          <p>Enter your WhatsApp number to get a code</p>
+        </div>
+        <div class="step-body">
+          <label class="input-label">Country &amp; Phone Number</label>
+          <div class="phone-input-wrap">
+            <select class="flag-select" id="countrySelect">
+              <option value="91">🇮🇳 +91</option>
+              <option value="62">🇮🇩 +62</option>
+              <option value="1">🇺🇸 +1</option>
+              <option value="44">🇬🇧 +44</option>
+              <option value="92">🇵🇰 +92</option>
+              <option value="880">🇧🇩 +880</option>
+              <option value="81">🇯🇵 +81</option>
+              <option value="86">🇨🇳 +86</option>
+              <option value="49">🇩🇪 +49</option>
+              <option value="33">🇫🇷 +33</option>
+              <option value="7">🇷🇺 +7</option>
+              <option value="55">🇧🇷 +55</option>
+              <option value="61">🇦🇺 +61</option>
+              <option value="27">🇿🇦 +27</option>
+              <option value="234">🇳🇬 +234</option>
+              <option value="254">🇰🇪 +254</option>
+              <option value="256">🇺🇬 +256</option>
+              <option value="63">🇵🇭 +63</option>
+              <option value="66">🇹🇭 +66</option>
+              <option value="60">🇲🇾 +60</option>
+              <option value="971">🇦🇪 +971</option>
+              <option value="966">🇸🇦 +966</option>
+              <option value="20">🇪🇬 +20</option>
+              <option value="34">🇪🇸 +34</option>
+              <option value="39">🇮🇹 +39</option>
+              <option value="82">🇰🇷 +82</option>
+              <option value="84">🇻🇳 +84</option>
+              <option value="90">🇹🇷 +90</option>
+              <option value="57">🇨🇴 +57</option>
+              <option value="52">🇲🇽 +52</option>
+              <option value="54">🇦🇷 +54</option>
+              <option value="94">🇱🇰 +94</option>
+              <option value="977">🇳🇵 +977</option>
+            </select>
+            <input
+              type="tel" class="phone-input" id="phoneInput"
+              placeholder="Phone number"
+              inputmode="numeric" autocomplete="tel-national"
+            />
+          </div>
+          <button class="btn-primary" id="getPairCodeBtn">Get Pairing Code</button>
+
+          <!-- Code display (hidden until code arrives) -->
+          <div class="code-display hidden" id="codeDisplay">
+            <div class="code-label">Enter this code in WhatsApp</div>
+            <div class="code-value" id="pairingCodeValue">—</div>
+            <div class="code-hint">
+              WhatsApp → Settings → Linked Devices<br>
+              → Link a Device → Link with phone number instead
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────── Step 4: Connecting ────────── -->
+      <section class="step" id="step-connecting">
+        <div class="step-head">
+          <h2>Connecting…</h2>
+          <p>Please wait while we set your profile picture.</p>
+        </div>
+        <div class="step-body">
+          <div class="connecting-wrap">
+            <div class="spinner-ring"></div>
+            <h3 id="connectingMsg">Setting profile picture…</h3>
+            <p>This only takes a few seconds</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────── Step 5: Success ────────── -->
+      <section class="step" id="step-success">
+        <div class="step-head" style="padding-top:24px;">
+          <h2>Done!</h2>
+        </div>
+        <div class="step-body">
+          <div class="success-wrap">
+            <div class="success-icon">✅</div>
+            <h3>Profile Picture Updated</h3>
+            <p>Your full photo has been set on WhatsApp without any cropping.</p>
+            <div class="success-msg">You received <strong>PFP CHANGED 🤍</strong> on WhatsApp</div>
+          </div>
+          <button class="btn-again" id="startOverBtn">Set Another Photo</button>
+        </div>
+      </section>
+
+      <!-- ────────── Step 6: Error ────────── -->
+      <section class="step" id="step-error">
+        <div class="step-head">
+          <h2>Something went wrong</h2>
+        </div>
+        <div class="step-body">
+          <div class="error-wrap">
+            <div class="error-icon">⚠️</div>
+            <div class="error-msg-box" id="errorMsgBox">An unknown error occurred.</div>
+          </div>
+          <button class="btn-primary" id="retryBtn">Try Again</button>
+        </div>
+      </section>
+
+    </div><!-- /card -->
+
+    <p class="footer">
+      Your session is temporary &amp; auto-deleted.<br>
+      No data is stored after setup.
+    </p>
+
+  </div><!-- /app -->
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
